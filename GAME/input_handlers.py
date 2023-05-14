@@ -5,10 +5,25 @@ import tcod.event
 from actions import Action, EscapeAction, MovementAction
 
 class EventHandler(tcod.event.EventDispatch[Action]):
+    '''
+    Class that handles events based upon pressing buttons.
+
+    METHODS:
+
+    ev_quit()
+
+    ev_keydown()
+    '''
     def ev_quit(self, event: tcod.event.Quit) -> Optional[Action]:
+        '''
+        Method that exits the game.
+        '''
         raise SystemExit()
     
     def ev_keydown(self, event: tcod.event.KeyDown) -> Optional[Action]:
+        '''
+        Method that reacts to pressed buttons.
+        '''
         action: Optional[Action] = None
 
         key = event.sym
