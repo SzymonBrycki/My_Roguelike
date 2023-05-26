@@ -1,0 +1,3 @@
+To begin, we need to determine if the space the player is trying to move into has an Entity in it. Not just any Entity, however: we’ll check if the Entity has “blocks_movement” set to True. If it does, our player can’t move there, and tries to attack instead.
+
+Add the following to the map:
