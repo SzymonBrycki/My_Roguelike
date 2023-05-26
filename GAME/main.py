@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 import tcod
 
+import copy
+
 from engine import Engine
 
-from entity import Entity
+import entity_factories
 
 # from game_map import GameMap
 
@@ -22,6 +24,7 @@ def main() -> None:
     room_min_size = 6
     max_rooms = 30
 
+    max_monsters_per_room = 2
     
     tileset = tcod.tileset.load_tilesheet(
         "dejavu10x10_gs_tc.png", 32, 8, tcod.tileset.CHARMAP_TCOD
@@ -29,11 +32,11 @@ def main() -> None:
 
     event_handler = EventHandler()
 
-    oPlayer = Entity(int(screen_width /2), int(screen_height /2), "@", (255, 255, 255))
+    oPlayer = copy.deepcopy(entity_factories.player)
 
-    oNpc = Entity(int(screen_width /2 -5), int(screen_height /2), "@", (255, 255, 0))
+    # oNpc = Entity(int(screen_width /2 -5), int(screen_height /2), "@", (255, 255, 0))
 
-    entities ={oNpc, oPlayer}
+    # entities ={oNpc, oPlayer}
 
     o_game_map = generate_dungeon(
         max_rooms = max_rooms,
@@ -41,10 +44,11 @@ def main() -> None:
         room_max_size = room_max_size,
         map_width = map_width,
         map_height = map_height,
+        max_monsters_per_room = max_monsters_per_room,
         player = oPlayer
     )
 
-    oEngine = Engine(entities = entities, event_handler = event_handler, game_map = o_game_map, player = oPlayer)
+    oEngine = Engine(event_handler = event_handler, game_map = o_game_map, player = oPlayer)
 
     with tcod.context.new_terminal(
         screen_width,
