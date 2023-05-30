@@ -21,32 +21,23 @@ class Action:
 class EscapeAction(Action):
     def perform(self, engine: Engine, entity: Entity) -> None:
         raise SystemExit()
+    
+class ActionWithDirection(Action):
+    def __init__(self, dx: int, dy: int):
+        super().__init()
 
-class MovementAction(Action):
+        self.dx = dx
+        self.dy = dy
+
+    def perform(self, engine: Engine, entity: Entity) -> None:
+        raise NotImplementedError()
+
+class MovementAction(ActionWithDirection):
     '''
     Class that deals with the movement.
 
     METHODS:
-
-    __init__()
     '''
-    def __init__(self, dx: int, dy: int):
-        '''
-        Method
-
-        ARGUMENTS:
-
-        dx (int)
-        dy (int)
-
-        RETURNS:
-
-        Nothing
-        '''
-        super().__init__()
-
-        self.dx = dx
-        self.dy = dy
 
     def perform(self, engine: Engine, entity: Entity) -> None:
         dest_x = entity.x + self.dx
@@ -57,5 +48,8 @@ class MovementAction(Action):
         
         if not engine.game_map.tiles["walkable"][dest_x, dest_y]:
             return # Destination is blocked by a tile.
+        
+        if engine.game_map.get_blocking_entity_at_location(dest_x, dest_y):
+            return # Destination is blocked by an entity
         
         entity.move(self.dx, self.dy)
