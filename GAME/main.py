@@ -9,7 +9,7 @@ import entity_factories
 
 # from game_map import GameMap
 
-from input_handlers import EventHandler
+# from input_handlers import EventHandler
 
 from procgen import generate_dungeon
 
@@ -30,25 +30,21 @@ def main() -> None:
         "dejavu10x10_gs_tc.png", 32, 8, tcod.tileset.CHARMAP_TCOD
     )
 
-    event_handler = EventHandler()
-
     oPlayer = copy.deepcopy(entity_factories.player)
 
-    # oNpc = Entity(int(screen_width /2 -5), int(screen_height /2), "@", (255, 255, 0))
+    oEngine = Engine(player=oPlayer)
 
-    # entities ={oNpc, oPlayer}
-
-    o_game_map = generate_dungeon(
+    oEngine.game_map = generate_dungeon(
         max_rooms = max_rooms,
         room_min_size = room_min_size,
         room_max_size = room_max_size,
         map_width = map_width,
         map_height = map_height,
         max_monsters_per_room = max_monsters_per_room,
-        player = oPlayer
+        engine = oEngine
     )
 
-    oEngine = Engine(event_handler = event_handler, game_map = o_game_map, player = oPlayer)
+    oEngine.update_fov()
 
     with tcod.context.new_terminal(
         screen_width,
@@ -63,9 +59,7 @@ def main() -> None:
         while True:
             oEngine.render(console = root_console, context = context)
 
-            events = tcod.event.wait()
-
-            oEngine.handle_events(events)
+            oEngine.event_handler.handle_events()
 
 if __name__ == "__main__":
     main()
